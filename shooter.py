@@ -11,10 +11,12 @@ class Shooter:
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
     def move_left(self, new_x):
-        self.x -= new_x
+        if not(self.x < 10):
+            self.x -= new_x
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
     def move_right(self, new_x):
-        self.x += new_x
+        if not(self.x > 820):
+            self.x += new_x
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
