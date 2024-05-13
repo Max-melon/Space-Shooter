@@ -13,6 +13,3 @@ class Meteor:
     def fall(self, speed):
         self.y += speed
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
-        if self.y >= 1200:
-            self.y = -10
-            self.x = random.randint(80, 810)
