@@ -13,7 +13,7 @@ pygame.display.set_caption("Space Shooter!")
 bg = pygame.image.load("space_background.jpg")
 begin_time = time.time()
 rocket = Shooter(40,860)
-meteor = Meteor(120, 130)
+meteor = Meteor(320, 0)
 size = (900, 1000)
 health = 3
 how_to_play = "The goal of the game is to survive for as long as possible."
@@ -51,6 +51,7 @@ while run:
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         rocket.move_right(10)
         start = True
+        test -= 1
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
         rocket.move_left(10)
         start = True
@@ -72,8 +73,8 @@ while run:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
-
-    meteor.fall(10)
+    if start:
+        meteor.fall(10)
     if bullet1_release:
         bullet_1.fly(3)
     if bullet_2_release:
@@ -92,6 +93,7 @@ while run:
         if meteor.rect.colliderect(bullet_2.rect):
             meteor.y = -10
             meteor.x = random.randint(80, 810)
+            bullet_2.y = 3000
 
 
     if meteor.y >= 1200:
@@ -101,6 +103,8 @@ while run:
     if health == 0:
         lose = True
 
+
+
     screen.blit(bg, (0, 0))
     if bullet1_release and not(lose):
         screen.blit(bullet_1.image, bullet_1.rect)
@@ -109,6 +113,8 @@ while run:
     if bullet_2_release and not(lose):
         screen.blit(bullet_2.image, bullet_2.rect)
         if bullet_2.y < -230:
+            released_2 = False
+        elif bullet_2.y > 1000:
             released_2 = False
     if not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
