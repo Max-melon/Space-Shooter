@@ -5,6 +5,8 @@ from shooter import Shooter
 from meteor import Meteor
 from bullet import Bullet
 from bullet_2 import Bullet_2
+from boss import Boss
+
 
 pygame.init()
 pygame.font.init()
@@ -16,6 +18,7 @@ rocket = Shooter(40,860)
 meteor = Meteor(320, 0)
 size = (900, 1000)
 health = 3
+boss = Boss(100, 300, 500)
 how_to_play = "The goal of the game is to survive for as long as possible."
 how_to_play_2 = "Every time a meteor hits your or passes you, you lose a life."
 how_to_play_3 = "Shoot rockets at the meteors and make sure they don't pass you!"
@@ -38,8 +41,10 @@ released_2 = False
 bullet_2_release = False
 test = 1
 lose = False
+boss_start = False
 start = False
 frame = 0
+
 while run:
     if not(lose) and start:
         current_time = time.time()
@@ -93,7 +98,7 @@ while run:
         if meteor.rect.colliderect(bullet_2.rect):
             meteor.y = -10
             meteor.x = random.randint(80, 810)
-            bullet_2.y = 3000
+            bullet_2.y = 100000000
 
 
     if meteor.y >= 1200:
@@ -103,20 +108,25 @@ while run:
     if health == 0:
         lose = True
 
-
+    if start and test <= -1:
+        if stopwatch >= 30:
+            boss_start = True
 
     screen.blit(bg, (0, 0))
-    if bullet1_release and not(lose):
+    if bullet1_release and (not(lose) and not(boss_start)):
         screen.blit(bullet_1.image, bullet_1.rect)
         if bullet_1.y < -230:
             released_1 = False
-    if bullet_2_release and not(lose):
+    if bullet_2_release and not(lose) and not(boss_start):
         screen.blit(bullet_2.image, bullet_2.rect)
         if bullet_2.y < -230:
             released_2 = False
         elif bullet_2.y > 1000:
             released_2 = False
-    if not(lose) and start and (0 != test):
+    if boss_start:
+        screen.blit(rocket.image, rocket.rect)
+        screen.blit(boss.image, boss.rect)
+    elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)
         screen.blit(display_time, (600, 70))
