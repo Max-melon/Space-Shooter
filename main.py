@@ -13,7 +13,6 @@ pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans', 20)
 pygame.display.set_caption("Space Shooter!")
 bg = pygame.image.load("space_background.jpg")
-begin_time = time.time()
 rocket = Shooter(40,860)
 meteor = Meteor(320, 0)
 size = (900, 1000)
@@ -22,7 +21,7 @@ boss = Boss(100, 300, 500)
 how_to_play = "The goal of the game is to survive for as long as possible."
 how_to_play_2 = "Every time a meteor hits your or passes you, you lose a life."
 how_to_play_3 = "Shoot rockets at the meteors and make sure they don't pass you!"
-how_to_play_4 = "Use \"a\" and \"d\" to move, and press space and \"s\" to shoot."
+how_to_play_4 = "Use \"a\" and \"d\" to move, and press space and left click to shoot."
 how_to_play_5 = "Press any key to start!"
 lose_message = "HAHAHAHA YOU LOSE YOU FREAKING SUCK"
 display_htp_message = my_font.render(how_to_play, True, (25, 255, 255))
@@ -44,8 +43,12 @@ lose = False
 boss_start = False
 start = False
 frame = 0
+check = True
 
 while run:
+    if start and check:
+        begin_time = time.time()
+        check = False
     if not(lose) and start:
         current_time = time.time()
         stopwatch = current_time - begin_time
@@ -61,23 +64,31 @@ while run:
         rocket.move_left(10)
         start = True
         test -= 1
-    if keys[pygame.K_s]:
+    if keys[pygame.K_SPACE]:
         if not(released_1):
             bullet_1 = Bullet(rocket.x - 92, 800)
         bullet1_release = True
         released_1 = True
         start = True
         test -= 1
-    if keys[pygame.K_SPACE]:
-        if not(released_2):
-            bullet_2 = Bullet_2(rocket.x+20, 800)
-        bullet_2_release = True
-        start = True
-        test -= 1
-        released_2 = True
+    # if keys[pygame.K_SPACE]:
+    #     if not(released_2):
+    #         bullet_2 = Bullet_2(rocket.x+20, 800)
+    #     bullet_2_release = True
+    #     start = True
+    #     test -= 1
+    #     released_2 = True
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
+        if event.type == pygame.MOUSEBUTTONUP:
+            if not (released_2):
+                bullet_2 = Bullet_2(rocket.x + 20, 800)
+            bullet_2_release = True
+            start = True
+            test -= 1
+            released_2 = True
+
     if start:
         meteor.fall(10)
     if bullet1_release:
