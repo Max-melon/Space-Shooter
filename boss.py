@@ -18,7 +18,9 @@ class Boss:
         for i in range(repeat):
             for i in range(3):
                 self.x += speed
+
             for i in range(3):
                 self.x -= speed
 
+        self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 

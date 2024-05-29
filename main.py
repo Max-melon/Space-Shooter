@@ -44,6 +44,7 @@ boss_start = False
 start = False
 frame = 0
 check = True
+count = True
 
 while run:
     if start and check:
@@ -53,6 +54,7 @@ while run:
         current_time = time.time()
         stopwatch = current_time - begin_time
         stopwatch = round(stopwatch, 2)
+        print(stopwatch)
         display_time = my_font.render("Time Elapsed: " + str(stopwatch), True, (25, 255, 255))
     display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
     keys = pygame.key.get_pressed()
@@ -69,8 +71,7 @@ while run:
             bullet_1 = Bullet(rocket.x - 92, 800)
         bullet1_release = True
         released_1 = True
-        start = True
-        test -= 1
+
     # if keys[pygame.K_SPACE]:
     #     if not(released_2):
     #         bullet_2 = Bullet_2(rocket.x+20, 800)
@@ -85,8 +86,6 @@ while run:
             if not (released_2):
                 bullet_2 = Bullet_2(rocket.x + 20, 800)
             bullet_2_release = True
-            start = True
-            test -= 1
             released_2 = True
 
     if start:
@@ -95,6 +94,15 @@ while run:
         bullet_1.fly(3)
     if bullet_2_release:
         bullet_2.fly(15)
+
+    if boss_start:
+        if (stopwatch * 100) % 500 == 0 and count:
+            print("hey")
+            boss.move(2, 2)
+            count = False
+        elif (stopwatch * 100) % 500 == 99:
+            print("OEGGGGGGGGGGGGGGGGGGG")
+            count = True
 
     if meteor.rect.colliderect(rocket.rect):
         meteor.y = -10
@@ -116,11 +124,11 @@ while run:
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
-    if health == 0:
-        lose = True
+    # if health == 0:
+    #     lose = True
 
     if start and test <= -1:
-        if stopwatch >= 30:
+        if stopwatch >= 10:
             boss_start = True
 
     screen.blit(bg, (0, 0))
@@ -137,6 +145,7 @@ while run:
     if boss_start:
         screen.blit(rocket.image, rocket.rect)
         screen.blit(boss.image, boss.rect)
+        screen.blit(display_health, (100, 70))
     elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)
