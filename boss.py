@@ -14,13 +14,11 @@ class Boss:
         self.image = pygame.transform.scale(self.image, scale_size)
         self.image_size = self.image.get_size()
 
-    def move(self, speed, repeat):
-        for i in range(repeat):
-            for i in range(3):
-                self.x += speed
+    def move_right(self, speed):
+        self.x += speed
+        self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 
-            for i in range(3):
-                self.x -= speed
-
+    def move_left(self, speed):
+        self.x -= speed
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
 

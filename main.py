@@ -13,17 +13,20 @@ pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans', 20)
 pygame.display.set_caption("Space Shooter!")
 bg = pygame.image.load("space_background.jpg")
+
 rocket = Shooter(40,860)
 meteor = Meteor(320, 0)
 size = (900, 1000)
 health = 3
-boss = Boss(100, 300, 500)
+boss = Boss(250, 300, 500)
+
 how_to_play = "The goal of the game is to survive for as long as possible."
 how_to_play_2 = "Every time a meteor hits your or passes you, you lose a life."
 how_to_play_3 = "Shoot rockets at the meteors and make sure they don't pass you!"
 how_to_play_4 = "Use \"a\" and \"d\" to move, and press space and left click to shoot."
 how_to_play_5 = "Press any key to start!"
 lose_message = "HAHAHAHA YOU LOSE YOU FREAKING SUCK"
+
 display_htp_message = my_font.render(how_to_play, True, (25, 255, 255))
 display_htp_2_message = my_font.render(how_to_play_2, True, (25, 255, 255))
 display_htp_3_message = my_font.render(how_to_play_3, True, (25, 255, 255))
@@ -33,8 +36,10 @@ display_lose = my_font.render(lose_message, True, (25, 255, 255))
 display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+
+direction = True
 run = True
-bullet1_release = False
+bullet_1_release = False
 released_1 = False
 released_2 = False
 bullet_2_release = False
@@ -45,6 +50,7 @@ start = False
 frame = 0
 check = True
 count = True
+
 
 while run:
     if start and check:
@@ -59,11 +65,11 @@ while run:
     display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-        rocket.move_right(10)
+        rocket.move_right(5)
         start = True
         test -= 1
     if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-        rocket.move_left(10)
+        rocket.move_left(5)
         start = True
         test -= 1
     if keys[pygame.K_SPACE]:
@@ -71,14 +77,6 @@ while run:
             bullet_1 = Bullet(rocket.x - 92, 800)
         bullet1_release = True
         released_1 = True
-
-    # if keys[pygame.K_SPACE]:
-    #     if not(released_2):
-    #         bullet_2 = Bullet_2(rocket.x+20, 800)
-    #     bullet_2_release = True
-    #     start = True
-    #     test -= 1
-    #     released_2 = True
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
@@ -89,22 +87,28 @@ while run:
             released_2 = True
 
     if start:
-        meteor.fall(10)
-    if bullet1_release:
-        bullet_1.fly(3)
+        meteor.fall(5)
+    if bullet_1_release:
+        bullet_1.fly(1.5)
     if bullet_2_release:
-        bullet_2.fly(15)
+        bullet_2.fly(7.5)
 
     if boss_start:
-        if (stopwatch * 100) % 500 == 0 and count:
-            print("hey")
-            boss.move(2, 2)
+        if ((stopwatch * 100) % 100 == 0 and count) and direction:
+            boss.move_right(200)
+            print("I MOVEEEEEEEEEEEEEEEEEEED RIGHT")
             count = False
-        elif (stopwatch * 100) % 500 == 99:
+            direction = False
+        elif ((stopwatch * 100) % 100 == 0 and count) and not(direction):
+            print("I MOVEEEEEEEEEEEEEEEEEEED LEFT")
+            boss.move_left(200)
+            count = False
+            direction = True
+        elif (stopwatch * 100) % 100 == 99:
             print("OEGGGGGGGGGGGGGGGGGGG")
             count = True
 
-    if meteor.rect.colliderect(rocket.rect):
+    if meteor.rect.colliderect(rocket.rect) and not(boss_start):
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
@@ -120,7 +124,7 @@ while run:
             bullet_2.y = 100000000
 
 
-    if meteor.y >= 1200:
+    if meteor.y >= 1200 and not(boss_start):
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
@@ -130,9 +134,10 @@ while run:
     if start and test <= -1:
         if stopwatch >= 10:
             boss_start = True
+            health = 3
 
     screen.blit(bg, (0, 0))
-    if bullet1_release and (not(lose) and not(boss_start)):
+    if bullet_1_release and (not(lose) and not(boss_start)):
         screen.blit(bullet_1.image, bullet_1.rect)
         if bullet_1.y < -230:
             released_1 = False
@@ -160,7 +165,7 @@ while run:
     elif lose:
         screen.blit(display_lose, (220, 500))
         screen.blit(display_time, (350, 400))
-    clock.tick(60)
+    clock.tick(120)
     pygame.display.update()
 
 
