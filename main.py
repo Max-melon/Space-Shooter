@@ -6,6 +6,7 @@ from meteor import Meteor
 from bullet import Bullet
 from bullet_2 import Bullet_2
 from boss import Boss
+from egg import Egg
 
 
 pygame.init()
@@ -19,6 +20,7 @@ meteor = Meteor(320, 0)
 size = (900, 1000)
 health = 3
 boss = Boss(250, 300, 500)
+egg = Egg(1000,100)
 
 how_to_play = "The goal of the game is to survive for as long as possible."
 how_to_play_2 = "Every time a meteor hits your or passes you, you lose a life."
@@ -75,7 +77,7 @@ while run:
     if keys[pygame.K_SPACE]:
         if not(released_1):
             bullet_1 = Bullet(rocket.x - 92, 800)
-        bullet1_release = True
+        bullet_1_release = True
         released_1 = True
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
@@ -92,6 +94,8 @@ while run:
         bullet_1.fly(1.5)
     if bullet_2_release:
         bullet_2.fly(7.5)
+    if boss_start:
+        egg.fall(20)
 
     if boss_start:
         if ((stopwatch * 100) % 100 == 0 and count) and direction:
@@ -106,7 +110,12 @@ while run:
             direction = True
         elif (stopwatch * 100) % 100 == 99:
             print("OEGGGGGGGGGGGGGGGGGGG")
+            egg.x = boss.x
+            egg.y = boss.y
             count = True
+
+        if count:
+            egg.fall(20)
 
     if meteor.rect.colliderect(rocket.rect) and not(boss_start):
         meteor.y = -10
@@ -117,6 +126,7 @@ while run:
         if meteor.rect.colliderect(bullet_1.rect):
             meteor.y = -10
             meteor.x = random.randint(80, 810)
+
     if released_2:
         if meteor.rect.colliderect(bullet_2.rect):
             meteor.y = -10
@@ -128,8 +138,9 @@ while run:
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
-    # if health == 0:
-    #     lose = True
+
+    if health == 0:
+        lose = True
 
     if start and test <= -1:
         if stopwatch >= 10:
@@ -151,6 +162,7 @@ while run:
         screen.blit(rocket.image, rocket.rect)
         screen.blit(boss.image, boss.rect)
         screen.blit(display_health, (100, 70))
+        screen.blit(egg.image, egg.rect)
     elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)

@@ -1,12 +1,12 @@
 import pygame
+import random
 
-class Boss:
+class Egg:
 
-    def __init__(self, x, y, health):
+    def __init__(self, x, y):
         self.y = y
         self.x = x
-        self.health = health
-        self.image = pygame.image.load("boss.png")
+        self.image = pygame.image.load("egg.png")
         self.image_size = self.image.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
         self.image_size = self.image.get_size()
@@ -14,11 +14,6 @@ class Boss:
         self.image = pygame.transform.scale(self.image, scale_size)
         self.image_size = self.image.get_size()
 
-    def move_right(self, speed):
-        self.x += speed
+    def fall(self, speed):
+        self.y += speed
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
-
-    def move_left(self, speed):
-        self.x -= speed
-        self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
-
