@@ -62,7 +62,6 @@ while run:
         current_time = time.time()
         stopwatch = current_time - begin_time
         stopwatch = round(stopwatch, 2)
-        print(stopwatch)
         display_time = my_font.render("Time Elapsed: " + str(stopwatch), True, (25, 255, 255))
     display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
     keys = pygame.key.get_pressed()
@@ -98,18 +97,20 @@ while run:
         egg.fall(20)
 
     if boss_start:
-        if ((stopwatch * 100) % 100 == 0 and count) and direction:
+        if frame % 120 == 0:
+            print("move boss")
+        if (round(((stopwatch * 100) % 100), 0) == 0 and count) and direction:
             boss.move_right(200)
-            print("I MOVEEEEEEEEEEEEEEEEEEED RIGHT")
+            print(stopwatch, "I MOVEEEEEEEEEEEEEEEEEEED RIGHT")
             count = False
             direction = False
-        elif ((stopwatch * 100) % 100 == 0 and count) and not(direction):
-            print("I MOVEEEEEEEEEEEEEEEEEEED LEFT")
+        elif (round(((stopwatch * 100) % 100), 0) == 0 and count) and not(direction):
+            print(stopwatch, "I MOVEEEEEEEEEEEEEEEEEEED LEFT")
             boss.move_left(200)
             count = False
             direction = True
-        elif (stopwatch * 100) % 100 == 99:
-            print("OEGGGGGGGGGGGGGGGGGGG")
+        elif round(((stopwatch * 100) % 100), 0) == 99:
+            print(stopwatch, "OEGGGGGGGGGGGGGGGGGGG")
             egg.x = boss.x
             egg.y = boss.y
             count = True
@@ -138,12 +139,15 @@ while run:
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
+    elif egg.rect.colliderect(rocket.rect) and boss_start:
+        health -= 1
 
     if health == 0:
         lose = True
 
     if start and test <= -1:
-        if stopwatch >= 10:
+        if stopwatch >= 30 and not(boss_start):
+            boss_health = my_font.render(str(boss.health), True, (255, 25, 255))
             boss_start = True
             health = 3
 
@@ -158,11 +162,12 @@ while run:
             released_2 = False
         elif bullet_2.y > 1000:
             released_2 = False
-    if boss_start:
+    if boss_start and not(lose):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(boss.image, boss.rect)
         screen.blit(display_health, (100, 70))
         screen.blit(egg.image, egg.rect)
+        screen.blit(boss_health)
     elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)
