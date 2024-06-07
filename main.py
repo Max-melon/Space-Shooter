@@ -19,7 +19,7 @@ rocket = Shooter(40,860)
 meteor = Meteor(320, 0)
 size = (900, 1000)
 health = 3
-boss = Boss(250, 300, 500)
+boss = Boss(250, 100, 500)
 egg = Egg(1000,100)
 
 how_to_play = "The goal of the game is to survive for as long as possible."
@@ -139,15 +139,25 @@ while run:
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
-    elif egg.rect.colliderect(rocket.rect) and boss_start:
-        health -= 1
-
+    if boss_start:
+        if egg.rect.colliderect(rocket.rect) and boss_start:
+            health -= 1
+            egg.y = 10000
+        elif egg.rect.colliderect(bullet_2.rect) and boss_start:
+            egg.y = 10000
+            bullet_2.y = -100000
+        # elif egg.rect.colliderect(bullet_1.rect) and boss_start:
+        #     egg.y = 10000
+        elif bullet_2.rect.colliderect(boss.rect) and boss_start:
+            bullet_2 = 10000
+            boss.health -= 10
+            boss_health = my_font.render("Boss Health: " + str(boss.health), True, (255, 25, 255))
     if health == 0:
         lose = True
 
     if start and test <= -1:
-        if stopwatch >= 30 and not(boss_start):
-            boss_health = my_font.render(str(boss.health), True, (255, 25, 255))
+        if stopwatch >= 1 and not(boss_start):
+            boss_health = my_font.render("Boss Health: " + str(boss.health), True, (255, 25, 255))
             boss_start = True
             health = 3
 
@@ -156,7 +166,7 @@ while run:
         screen.blit(bullet_1.image, bullet_1.rect)
         if bullet_1.y < -230:
             released_1 = False
-    if bullet_2_release and not(lose) and not(boss_start):
+    if bullet_2_release and not(lose):
         screen.blit(bullet_2.image, bullet_2.rect)
         if bullet_2.y < -230:
             released_2 = False
@@ -167,7 +177,7 @@ while run:
         screen.blit(boss.image, boss.rect)
         screen.blit(display_health, (100, 70))
         screen.blit(egg.image, egg.rect)
-        screen.blit(boss_health)
+        screen.blit(boss_health, (720, 70))
     elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)
