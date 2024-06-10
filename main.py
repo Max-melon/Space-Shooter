@@ -12,6 +12,7 @@ from egg import Egg
 pygame.init()
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans', 20)
+better_font = pygame.font.SysFont('Comic Sans', 30)
 pygame.display.set_caption("Space Shooter!")
 bg = pygame.image.load("space_background.jpg")
 
@@ -28,6 +29,7 @@ how_to_play_3 = "Shoot rockets at the meteors and make sure they don't pass you!
 how_to_play_4 = "Use \"a\" and \"d\" to move, and press space and left click to shoot."
 how_to_play_5 = "Press any key to start!"
 lose_message = "HAHAHAHA YOU LOSE YOU FREAKING SUCK"
+win_message = "GOOD JOB YOU WIN!"
 
 display_htp_message = my_font.render(how_to_play, True, (25, 255, 255))
 display_htp_2_message = my_font.render(how_to_play_2, True, (25, 255, 255))
@@ -36,6 +38,7 @@ display_htp_4_message = my_font.render(how_to_play_4, True, (25, 255, 255))
 display_htp_5_message = my_font.render(how_to_play_5, True, (25, 255, 255))
 display_lose = my_font.render(lose_message, True, (25, 255, 255))
 display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
+display_win = better_font.render(win_message, True, (25, 255, 25))
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
@@ -52,7 +55,7 @@ start = False
 frame = 0
 check = True
 count = True
-
+win = False
 
 while run:
     if start and check:
@@ -97,6 +100,7 @@ while run:
         egg.fall(20)
 
     if boss_start:
+        # print(bullet_2.image)
         if frame % 120 == 0:
             print("move boss")
         if (round(((stopwatch * 100) % 100), 0) == 0 and count) and direction:
@@ -139,7 +143,7 @@ while run:
         meteor.y = -10
         meteor.x = random.randint(80, 810)
         health -= 1
-    if boss_start:
+    if boss_start and not(lose):
         if egg.rect.colliderect(rocket.rect) and boss_start:
             health -= 1
             egg.y = 10000
@@ -149,17 +153,21 @@ while run:
         # elif egg.rect.colliderect(bullet_1.rect) and boss_start:
         #     egg.y = 10000
         elif bullet_2.rect.colliderect(boss.rect) and boss_start:
-            bullet_2 = 10000
-            boss.health -= 10
+            bullet_2.y = 10000
+            boss.health -= 50
             boss_health = my_font.render("Boss Health: " + str(boss.health), True, (255, 25, 255))
     if health == 0:
         lose = True
 
     if start and test <= -1:
-        if stopwatch >= 1 and not(boss_start):
+        if stopwatch >= 30 and not(boss_start):
             boss_health = my_font.render("Boss Health: " + str(boss.health), True, (255, 25, 255))
             boss_start = True
             health = 3
+
+    if boss.health == 0:
+        boss_start = False
+        win = True
 
     screen.blit(bg, (0, 0))
     if bullet_1_release and (not(lose) and not(boss_start)):
@@ -178,6 +186,8 @@ while run:
         screen.blit(display_health, (100, 70))
         screen.blit(egg.image, egg.rect)
         screen.blit(boss_health, (720, 70))
+    elif win:
+        screen.blit(display_win, (280, 400))
     elif not(lose) and start and (0 != test):
         screen.blit(rocket.image, rocket.rect)
         screen.blit(meteor.image, meteor.rect)
