@@ -27,7 +27,7 @@ how_to_play = "The goal of the game is to survive for as long as possible."
 how_to_play_2 = "Every time a meteor hits your or passes you, you lose a life."
 how_to_play_3 = "Shoot rockets at the meteors and make sure they don't pass you!"
 how_to_play_4 = "Use \"a\" and \"d\" to move, and press space and left click to shoot."
-how_to_play_5 = "Press any key to start!"
+how_to_play_5 = "Press \"a\" or \"d\" to start!"
 lose_message = "HAHAHAHA YOU LOSE YOU FREAKING SUCK"
 win_message = "GOOD JOB YOU WIN!"
 
@@ -36,7 +36,7 @@ display_htp_2_message = my_font.render(how_to_play_2, True, (25, 255, 255))
 display_htp_3_message = my_font.render(how_to_play_3, True, (25, 255, 255))
 display_htp_4_message = my_font.render(how_to_play_4, True, (25, 255, 255))
 display_htp_5_message = my_font.render(how_to_play_5, True, (25, 255, 255))
-display_lose = my_font.render(lose_message, True, (25, 255, 255))
+display_lose = my_font.render(lose_message, True, (255, 25, 25))
 display_health = my_font.render("Health: " + str(health), True, (25, 255, 255))
 display_win = better_font.render(win_message, True, (25, 255, 25))
 screen = pygame.display.set_mode(size)
@@ -91,7 +91,7 @@ while run:
             released_2 = True
 
     if start:
-        meteor.fall(5)
+        meteor.fall(5.5)
     if bullet_1_release:
         bullet_1.fly(1.5)
     if bullet_2_release:
@@ -150,8 +150,6 @@ while run:
         elif egg.rect.colliderect(bullet_2.rect) and boss_start:
             egg.y = 10000
             bullet_2.y = -100000
-        # elif egg.rect.colliderect(bullet_1.rect) and boss_start:
-        #     egg.y = 10000
         elif bullet_2.rect.colliderect(boss.rect) and boss_start:
             bullet_2.y = 10000
             boss.health -= 50
@@ -174,7 +172,7 @@ while run:
         screen.blit(bullet_1.image, bullet_1.rect)
         if bullet_1.y < -230:
             released_1 = False
-    if bullet_2_release and not(lose):
+    if bullet_2_release and not(lose) and not win:
         screen.blit(bullet_2.image, bullet_2.rect)
         if bullet_2.y < -230:
             released_2 = False
