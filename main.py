@@ -101,20 +101,15 @@ while run:
 
     if boss_start:
         # print(bullet_2.image)
-        if frame % 120 == 0:
-            print("move boss")
         if (round(((stopwatch * 100) % 100), 0) == 0 and count) and direction:
             boss.move_right(200)
-            print(stopwatch, "I MOVEEEEEEEEEEEEEEEEEEED RIGHT")
             count = False
             direction = False
         elif (round(((stopwatch * 100) % 100), 0) == 0 and count) and not(direction):
-            print(stopwatch, "I MOVEEEEEEEEEEEEEEEEEEED LEFT")
             boss.move_left(200)
             count = False
             direction = True
         elif round(((stopwatch * 100) % 100), 0) == 99:
-            print(stopwatch, "OEGGGGGGGGGGGGGGGGGGG")
             egg.x = boss.x
             egg.y = boss.y
             count = True
